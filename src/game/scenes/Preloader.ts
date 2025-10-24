@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { Convert } from '../../parser/Convert';
+import { LevelScene } from './LevelScene';
 
 export class Preloader extends Scene {
     constructor() {
@@ -34,6 +35,8 @@ export class Preloader extends Scene {
         this.load.image('player', 'playerIdle.png')
         this.load.json('labyrinth', 'lab.ldtk')
         this.load.image('stoneTiles', 'stoneTiles.png')
+        this.load.image('Key', 'key.png');
+        this.load.image('Healing_Potion', 'healingPotion.png');
         this.load.spritesheet('door', 'stoneTiles.png', { frameWidth: 8, frameHeight: 8, startFrame: 9, endFrame: 10 });
     }
 
@@ -43,6 +46,13 @@ export class Preloader extends Scene {
         const ldtkData = this.cache.json.get("labyrinth");
         const schema = Convert.toCoordinate(JSON.stringify(ldtkData));
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('Game', { ldtkData: schema });
+        schema.levels.forEach((level) => {
+            this.scene.add(
+                "LevelScene-" + level.identifier,
+                new LevelScene(level.identifier, schema),
+                false,
+            );
+        });
+        this.scene.start('LevelScene-0', { ldtkData: schema });
     }
 }

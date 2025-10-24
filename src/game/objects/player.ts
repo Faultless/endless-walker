@@ -1,5 +1,5 @@
 import { TILE_SIZE } from "../../helpers/constants";
-import { Game } from "../scenes/Game";
+import { LevelScene } from "../scenes/LevelScene";
 
 export enum SOBRIETY {
     SOBER = 0,
@@ -51,9 +51,14 @@ export default class Player extends Phaser.GameObjects.Sprite {
                 positionX = this.x;
                 positionY = this.y;
         }
-        const collisionLayer = (this.scene as Game).collisionLayer;
+        const collisionLayer = (this.scene as LevelScene).collisionLayer;
+        const portal = (this.scene as LevelScene).portal;
         if (positionX > collisionLayer[0].length * TILE_SIZE || positionX < 0) return;
         if (positionY >= collisionLayer.length * TILE_SIZE || positionY < 0) return;
+        if (positionX === portal.x && positionY === portal.y) {
+            this.setPosition(portal.destination.x, portal.destination.y);
+            return;
+        }
         if (collisionLayer[Math.ceil(positionY / TILE_SIZE)][Math.ceil(positionX / TILE_SIZE)] === 0) this.setPosition(positionX, positionY);
     }
 
