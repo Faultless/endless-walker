@@ -47,12 +47,14 @@ export class Preloader extends Scene {
         const schema = Convert.toCoordinate(JSON.stringify(ldtkData));
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         schema.levels.forEach((level) => {
+            console.log("level", level, level.identifier)
             this.scene.add(
-                "LevelScene-" + level.identifier,
-                new LevelScene(level.identifier, schema),
+                level.identifier,
+                new LevelScene(level.identifier),
                 false,
             );
         });
-        this.scene.start('LevelScene-0', { ldtkData: schema });
+        this.registry.set('schema', schema);
+        this.scene.start('Level_0');
     }
 }

@@ -21,19 +21,14 @@ export class LevelScene extends Scene {
     keys?: Record<string, any>;
     entities?: any[];
 
-    constructor(levelId: string, ldtkData: Coordinate) {
-        super("LevelScene-" + levelId);
-        this.levelId = Number(levelId);
-        this.ldtkData = ldtkData;
+    constructor(levelId: string) {
+        super(levelId);
+        this.levelId = Number(levelId.split('_')[1]);
         this.sound?.stopAll()
     }
 
-    init(data: { ldtkData: Coordinate }) {
-        this.data.set('ldtkData', data.ldtkData);
-    }
-
     create() {
-        const ldtkData: Coordinate = this.data.get('ldtkData');
+        const ldtkData: Coordinate = this.registry.get('schema');
         // map builder
         const map = this.make.tilemap({ key: 'stoneTiles', tileWidth: 8, tileHeight: 8, height: 32, width: 32 });
         const tilesets = { stoneTiles: map.addTilesetImage('stoneTiles', undefined, 8, 8)! };
@@ -78,6 +73,7 @@ export class LevelScene extends Scene {
         this.keys = keys;
 
         this.camera = this.cameras.main;
+
 
         EventBus.emit('current-scene-ready', this);
     }

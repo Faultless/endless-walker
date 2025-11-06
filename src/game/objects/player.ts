@@ -56,6 +56,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
         if (positionX > collisionLayer[0].length * TILE_SIZE || positionX < 0) return;
         if (positionY >= collisionLayer.length * TILE_SIZE || positionY < 0) return;
         if (positionX === portal.x && positionY === portal.y) {
+            this.scene.scene.start('Level_1')
             this.setPosition(portal.destination.x, portal.destination.y);
             return;
         }
